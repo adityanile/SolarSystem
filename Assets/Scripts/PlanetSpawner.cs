@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlanetSpawner : MonoBehaviour
@@ -9,6 +7,11 @@ public class PlanetSpawner : MonoBehaviour
 
     private Vector3 screenPoint;
     private Vector3 offset;
+
+    public bool spawnAsMoon = false;
+    private GameObject trig;
+
+    float moonOffset = 3;
 
     private void Start()
     {
@@ -30,7 +33,62 @@ public class PlanetSpawner : MonoBehaviour
 
     private void OnMouseUp()
     {
-        Instantiate(planet, transform.position, planet.transform.rotation, SolarSystem);
+        if (spawnAsMoon)
+        {
+            float m1 = planet.GetComponent<Rigidbody2D>().mass;
+            float m2 = trig.GetComponent<Rigidbody2D>().mass;
+                Vector3 pos = new Vector3(moonOffset, moonOffset, 0);
+
+            if (m1 < m2)
+            {
+                GameObject moon = Instantiate(planet, pos, planet.transform.rotation, trig.transform);
+                moon.transform.localPosition = pos;
+
+                PlanetManager pm = moon.GetComponent<PlanetManager>();
+                pm.sun = trig;
+
+                pm.CalculateRadius();
+            }
+            else
+            {
+                // Make other planet moon of this planet
+                GameObject pl = Instantiate(planet, transform.position, planet.transform.rotation, SolarSystem);
+                pl.GetComponent<PlanetManager>().areuPlanet = true;
+
+                trig.transform.parent = pl.transform;
+                trig.transform.localPosition = pos;
+                
+                PlanetManager pm = trig.GetComponent<PlanetManager>();
+                pm.sun = pl;
+                pm.areuPlanet = false;
+                
+                pm.CalculateRadius();
+            }
+
+            Destroy(gameObject);
+                return;
+        }
+
+        GameObject plnt = Instantiate(planet, transform.position, planet.transform.rotation, SolarSystem);
+        plnt.GetComponent<PlanetManager>().areuPlanet = true;
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<PlanetManager>().areuPlanet)
+        {
+            spawnAsMoon = true;
+            trig = collision.gameObject;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.GetComponent<PlanetManager>().areuPlanet)
+        {
+            spawnAsMoon = false;
+            trig = null;
+        }
     }
 }

@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlanetManager : MonoBehaviour
 {
-    private static float G = 6.67f;
+    public GameObject sun;
+    public bool areuSun = false;
+    public bool areuPlanet = false;
 
-    private GameObject sun;
+    private SolarSystem SolarSystem;
 
     private Rigidbody2D rb;
-    public float force;
 
+    public float forceDueToStar;
     private float radius = 0;
     private float m1;
     private float m2;
@@ -18,32 +18,61 @@ public class PlanetManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // First find around which planet this palnet will rotate
-        sun = GameObject.FindGameObjectWithTag("Sun");
         rb = gameObject.GetComponent<Rigidbody2D>();
+        SolarSystem = GameObject.Find("SolarSystem").GetComponent<SolarSystem>();
 
-        Vector3 dir = (sun.transform.position - transform.position);
-        radius = dir.magnitude;
+        if (areuPlanet)
+        {
+            // First find around which planet this palnet will rotate
+            // If sun is not present there then the first planet to enter will be the sun
+            sun = SolarSystem.sun;
 
-        m1 = rb.mass;
-        m2 = sun.GetComponent<Rigidbody2D>().mass;
+            if (!sun)
+            {
+                SolarSystem.sun = gameObject;
+                sun = gameObject;
+                areuSun = true;
+
+                return;
+            }
+
+            SolarSystem.planets.Add(gameObject);
+            CalculateRadius();
+        }
     }
 
     // Update is called once per frame
     void Update()
-    { 
-        force = (G * m1 * m2) / (radius * radius);
-        transform.RotateAround(sun.transform.position, sun.transform.forward, force * Time.deltaTime);
+    {
+        if (!areuSun)
+        {
+            m1 = rb.mass;
+            m2 = sun.GetComponent<Rigidbody2D>().mass;
+
+            if (areuPlanet)
+            {
+                // If the planet has mass more than the sun then all planets will revolve around new sun
+                if (m1 > m2)
+                {
+                    SolarSystem.ChangeSun(gameObject);
+                }
+                else
+                {
+                    forceDueToStar = (SolarSystem.G * m1 * m2) / Mathf.Pow(radius, 2);
+                    transform.RotateAround(sun.transform.position, sun.transform.forward, forceDueToStar * Time.deltaTime);
+                }
+            }
+            else
+            {
+                forceDueToStar = (SolarSystem.G * m1 * m2) / Mathf.Pow(radius, 2);
+                transform.RotateAround(sun.transform.position, sun.transform.forward, forceDueToStar * Time.deltaTime);
+            }
+        }
     }
 
-    Vector3 CalculateVelDir()
+    public void CalculateRadius(float compression = 0)
     {
         Vector3 dir = (sun.transform.position - transform.position);
-        radius = dir.magnitude;
-
-        float x = (-dir.y) / (dir.magnitude);
-        float y = (dir.x) / (dir.magnitude);
-
-        return new Vector3(-x, -y, dir.z).normalized;
+        radius = dir.magnitude - compression;
     }
 }
