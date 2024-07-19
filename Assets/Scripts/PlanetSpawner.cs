@@ -33,6 +33,13 @@ public class PlanetSpawner : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (gameObject.CompareTag("BlackHole"))
+        {
+            Instantiate(planet, transform.position, planet.transform.rotation);
+            Destroy(gameObject);
+            return;
+        }
+
         if (spawnAsMoon)
         {
             float m1 = planet.GetComponent<Rigidbody2D>().mass;
