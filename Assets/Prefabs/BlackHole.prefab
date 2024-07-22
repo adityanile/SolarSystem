@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   celectialObjects: []
-  scaleDown: 4
+  scaleDown: 6
   offset: 6
   time: 3
   start: 1

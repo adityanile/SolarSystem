@@ -38,7 +38,7 @@ public class PlanetSpawner : MonoBehaviour
             Instantiate(planet, transform.position, planet.transform.rotation);
             Destroy(gameObject);
             return;
-        }
+        }   
 
         if (spawnAsMoon)
         {

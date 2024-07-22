@@ -11,15 +11,26 @@ public class PlanetManager : MonoBehaviour
     private Rigidbody2D rb;
 
     public float forceDueToStar;
-    private float radius = 0;
-    private float m1;
+    public float radius = 0;
+    public float m1;
     private float m2;
+
+    private CanvasManager canvasManager;
+
+    public float origMass;
+
+    public float s1Scale;
+    public float s2Scale;
 
     // Start is called before the first frame update
     void Start()
     {
+        canvasManager = GameObject.Find("Canvas").GetComponent<CanvasManager>();
+
         rb = gameObject.GetComponent<Rigidbody2D>();
         SolarSystem = GameObject.Find("SolarSystem").GetComponent<SolarSystem>();
+
+        origMass = rb.mass;
 
         if (areuPlanet)
         {
@@ -74,5 +85,10 @@ public class PlanetManager : MonoBehaviour
     {
         Vector3 dir = (sun.transform.position - transform.position);
         radius = dir.magnitude - compression;
+    }
+
+    private void OnMouseDown()
+    {
+        canvasManager.Init(gameObject);
     }
 }
