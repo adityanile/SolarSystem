@@ -105,7 +105,7 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.93710685, g: 0.39186984, b: 0.35657197, a: 1}
+      key0: {r: 0.93710685, g: 0.39186984, b: 0.35657197, a: 0.11764706}
       key1: {r: 1, g: 1, b: 1, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -281,6 +281,11 @@ MonoBehaviour:
   areuSun: 0
   areuPlanet: 0
   forceDueToStar: 0
+  radius: 0
+  m1: 0
+  origMass: 0
+  s1Scale: 0
+  s2Scale: 0
 --- !u!50 &4699728341534962937
 Rigidbody2D:
   serializedVersion: 4

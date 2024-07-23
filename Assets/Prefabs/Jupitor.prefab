@@ -79,6 +79,11 @@ MonoBehaviour:
   areuSun: 0
   areuPlanet: 0
   forceDueToStar: 0
+  radius: 0
+  m1: 0
+  origMass: 0
+  s1Scale: 0
+  s2Scale: 0
 --- !u!60 &1970407378582270417
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -234,7 +239,7 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.6381472, g: 0.91823894, b: 0.91021717, a: 1}
+      key0: {r: 0.6381472, g: 0.91823894, b: 0.91021717, a: 0.11764706}
       key1: {r: 1, g: 1, b: 1, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
